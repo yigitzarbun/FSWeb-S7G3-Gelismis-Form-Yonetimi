@@ -1,6 +1,8 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import * as Yup from "yup";
+import { formSchema } from "./validations/FormValidation";
 import Form from "./components/Form";
 
 function App() {
@@ -13,7 +15,7 @@ function App() {
   });
 
   //handle change
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     //const name = event.target.name;
     //const value = event.target.value;
     const { name, value } = event.target;
@@ -23,6 +25,9 @@ function App() {
       newValue = event.target.checked;
     }
     setFormData({ ...formData, [name]: newValue });
+
+    const isValid = await formSchema.isValid(formData);
+    console.log(isValid);
   };
 
   //handle submit
