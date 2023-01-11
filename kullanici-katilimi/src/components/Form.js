@@ -1,5 +1,10 @@
+import React, { Component } from "react";
+import styled from "styled-components";
+
 export default function Form(props) {
-  const { handleChange, handleSubmit, formData } = props;
+  const { handleChange, handleSubmit, formData, errors, buttonDisabled } =
+    props;
+
   return (
     <form onSubmit={handleSubmit}>
       <p>
@@ -15,6 +20,7 @@ export default function Form(props) {
           />
         </label>
       </p>
+      <p>{errors.name}</p>
       <p>
         <label htmlFor="email">
           Email
@@ -28,6 +34,7 @@ export default function Form(props) {
           />
         </label>
       </p>
+      <p>{errors.email}</p>
       <p>
         <label htmlFor="password">
           Password
@@ -41,6 +48,7 @@ export default function Form(props) {
           />
         </label>
       </p>
+      <p>{errors.password}</p>
       <p>
         <input
           type="checkbox"
@@ -51,9 +59,10 @@ export default function Form(props) {
         />
         <label htmlFor="terms">I accept Terms of Service</label>
       </p>
+      <p>{errors.terms}</p>
       <p>
         <label htmlFor="submit">
-          <input type="submit" id="submit" />
+          <input type="submit" id="submit" disabled={buttonDisabled} />
         </label>
       </p>
     </form>

@@ -5,4 +5,8 @@ export const formSchema = Yup.object().shape({
   password: Yup.string()
     .min(5, "Password must be string and its length over 5 characters")
     .required(),
+  terms: Yup.boolean().oneOf(
+    [true],
+    "Terms must be accepted before signing up"
+  ),
 });

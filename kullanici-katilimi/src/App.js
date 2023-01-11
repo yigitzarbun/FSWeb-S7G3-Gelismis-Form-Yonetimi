@@ -6,7 +6,9 @@ import { formSchema } from "./validations/FormValidation";
 import Form from "./components/Form";
 
 function App() {
-  // state
+  // .......................................DEFINE STATES....................................
+
+  // form data state
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,26 +16,80 @@ function App() {
     terms: false,
   });
 
+  // new user state
+  const [newUser, setNewUser] = useState(null);
+
+  // error state
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    terms: "",
+  });
+
+  // disabled state
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
+  // .......................................HANDLE STATES....................................
+
   //handle change
   const handleChange = async (event) => {
-    //const name = event.target.name;
-    //const value = event.target.value;
-    const { name, value } = event.target;
+    const { name, value, type, checked } = event.target;
     let newValue = value;
 
-    if (event.target.type === "checkbox") {
-      newValue = event.target.checked;
+    if (type === "checkbox") {
+      newValue = checked;
     }
-    setFormData({ ...formData, [name]: newValue });
 
-    const isValid = await formSchema.isValid(formData);
-    console.log(isValid);
+    checkFormErrors(name, newValue);
+    setFormData({ ...formData, [name]: newValue });
   };
 
   //handle submit
   const handleSubmit = (event) => {
     event.preventDefault();
+    axios
+      .post("https://reqres.in/api/users", formData)
+      .then((response) => {
+        setNewUser(response.data);
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          terms: false,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
+  // handle button disabled
+
+  useEffect(() => {
+    formSchema.isValid(formData).then((result) => setButtonDisabled(!result));
+  }, [formData]);
+
+  // .......................................DATA VALIDATION....................................
+
+  // check errors
+  function checkFormErrors(name, value) {
+    Yup.reach(formSchema, name)
+      .validate(value)
+      .then(() => {
+        setErrors({
+          ...errors,
+          [name]: "",
+        });
+      })
+      .catch((err) => {
+        setErrors({
+          ...errors,
+          [name]: err.errors[0],
+        });
+      });
+  }
+  // .......................................RETURN UI....................................
 
   //return UI
   return (
@@ -42,7 +98,18 @@ function App() {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         formData={formData}
+        newUser={newUser}
+        errors={errors}
+        buttonDisabled={buttonDisabled}
       />
+      {newUser && (
+        <div>
+          <h2>Registration Successfull!</h2>
+          <p>
+            {newUser.name} was added with ID no: {newUser.id}.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
