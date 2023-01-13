@@ -6,7 +6,7 @@ export default function Form(props) {
     props;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} data-cy="form-field">
       <p>
         <label htmlFor="name">
           Name
@@ -17,6 +17,7 @@ export default function Form(props) {
             name="name"
             onChange={handleChange}
             placeholder="Name..."
+            data-cy="name-field"
           />
         </label>
       </p>
@@ -31,6 +32,7 @@ export default function Form(props) {
             name="email"
             onChange={handleChange}
             placeholder="email@email.com"
+            data-cy="email-field"
           />
         </label>
       </p>
@@ -45,6 +47,7 @@ export default function Form(props) {
             name="password"
             onChange={handleChange}
             placeholder="password123"
+            data-cy="password-field"
           />
         </label>
       </p>
@@ -56,13 +59,19 @@ export default function Form(props) {
           name="terms"
           checked={formData.terms}
           onChange={handleChange}
+          data-cy="terms-box"
         />
         <label htmlFor="terms">I accept Terms of Service</label>
       </p>
       <p>{errors.terms}</p>
       <p>
         <label htmlFor="submit">
-          <input type="submit" id="submit" disabled={buttonDisabled} />
+          <input
+            type="submit"
+            id="submit"
+            disabled={buttonDisabled}
+            data-cy="submit-button"
+          />
         </label>
       </p>
     </form>

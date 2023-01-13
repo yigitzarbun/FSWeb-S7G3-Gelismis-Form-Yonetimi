@@ -48,20 +48,25 @@ function App() {
   //handle submit
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("https://reqres.in/api/users", formData)
-      .then((response) => {
-        setNewUser(response.data);
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          terms: false,
+    if (buttonDisabled === false) {
+      axios
+        .post("https://reqres.in/api/users", formData)
+        .then((response) => {
+          setNewUser(response.data);
+          setFormData({
+            name: "",
+            email: "",
+            password: "",
+            terms: false,
+          });
+          setTimeout(() => {
+            document.querySelector("#success-message").textContent = "";
+          }, 5000);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }
   };
 
   // handle button disabled
@@ -103,7 +108,7 @@ function App() {
         buttonDisabled={buttonDisabled}
       />
       {newUser && (
-        <div>
+        <div id="success-message">
           <h2>Registration Successfull!</h2>
           <p>
             {newUser.name} was added with ID no: {newUser.id}.
